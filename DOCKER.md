@@ -245,49 +245,6 @@ docker run -d --name node-api -p 3000:3000 docker-node-lab
 
 Open http://localhost:3000.
 
-Inspect:
-
-```powershell
-docker images
-docker ps
-docker logs node-api
-docker inspect node-api
-```
-
-Clean up:
-
-```powershell
-docker stop node-api
-docker rm node-api
-```
-
-The image remains available after the container is removed.
-
-### Important: build attempt failed because of DNS
-
-The build failed while Docker tried to fetch metadata for `node:22-alpine`. The important error was:
-
-```text
-lookup registry-1.docker.io: no such host
-```
-
-This indicates Docker could not resolve Docker Hub's hostname at that time. It is a network/DNS/proxy issue, not a Dockerfile syntax error.
-
-Suggested diagnostic commands:
-
-```powershell
-nslookup registry-1.docker.io
-curl.exe -I https://registry-1.docker.io/v2/
-docker pull node:22-alpine
-```
-
-An HTTP `401 Unauthorized` from the registry `/v2/` endpoint can indicate that the endpoint is reachable and asking for authentication; it is not necessarily a connectivity failure.
-
-If Windows resolves the host but Docker still cannot pull, restart Docker Desktop, consider `wsl --shutdown` and reopen Docker Desktop, and inspect VPN, DNS, and proxy settings. Don't change network settings blindly.
-
-**Status:** Base image download/build needs to be retried after fixing connectivity.
-
----
 
 ## 8. `RUN` vs. `CMD` vs. `ENTRYPOINT`
 
